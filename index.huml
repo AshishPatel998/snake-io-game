@@ -1,96 +1,70 @@
-import pygame
-import random
-
-# Initialize Pygame
-pygame.init()
-
-# Constants
-SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
-SNAKE_SIZE = 10
-FOOD_SIZE = 10
-SNAKE_SPEED = 10
-
-# Colors
-BLACK = (0, 0, 0)
-NEON_GREEN = (57, 255, 20)
-
-# Create the screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-# Snake class
-class Snake:
-    def __init__(self):
-        self.length = 1
-        self.positions = [((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))]
-        self.direction = random.choice([pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT])
-        self.color = NEON_GREEN
-        self.score = 0
-
-    def get_head_position(self):
-        return self.positions[0]
-
-    def move(self):
-        cur = self.get_head_position()
-        x, y = cur
-        if self.direction == pygame.K_UP:
-            y -= SNAKE_SPEED
-        elif self.direction == pygame.K_DOWN:
-            y += SNAKE_SPEED
-        elif self.direction == pygame.K_LEFT:
-            x -= SNAKE_SPEED
-        elif self.direction == pygame.K_RIGHT:
-            x += SNAKE_SPEED
-        new_head = (x, y)
-        self.positions.insert(0, new_head)
-        if len(self.positions) > self.length:
-            self.positions.pop()
-
-    def handle_keys(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key in [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]:
-                    self.direction = event.key
-
-    def draw(self, surface):
-        for p in self.positions:
-            pygame.draw.rect(surface, self.color, pygame.Rect(p[0], p[1], SNAKE_SIZE, SNAKE_SIZE))
-
-# Food class
-class Food:
-    def __init__(self):
-        self.position = (0, 0)
-        self.color = NEON_GREEN
-        self.randomize_position()
-
-    def randomize_position(self):
-        self.position = (random.randint(0, (SCREEN_WIDTH - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE,
-                         random.randint(0, (SCREEN_HEIGHT - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE)
-
-    def draw(self, surface):
-        pygame.draw.rect(surface, self.color, pygame.Rect(self.position[0], self.position[1], FOOD_SIZE, FOOD_SIZE))
-
-# Main game loop
-def main():
-    clock = pygame.time.Clock()
-    snake = Snake()
-    food = Food()
-
-    while True:
-        snake.handle_keys()
-        snake.move()
-        if snake.get_head_position() == food.position:
-            snake.length += 1
-            snake.score += 1
-            food.randomize_position()
-
-        screen.fill(BLACK)
-        snake.draw(screen)
-        food.draw(screen)
-        pygame.display.update()
-
-        clock.tick(15)
-
-if __name__ == "__main__":
-    main()
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake.io Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Snake.io Game</h1>
+        
+        <div class="game-container">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div class="game-info">
+                <div id="score">Score: <span id="scoreValue">0</span></div>
+                <div id="highScore">High Score: <span id="highScoreValue">0</span></div>
+            </div>
+            <div class="controls">
+                <button id="startButton" class="btn">Start Game</button>
+                <button id="pauseButton" class="btn">Pause</button>
+                <div class="skin-selector">
+                    <label for="skinSelect">Snake Skin:</label>
+                    <select id="skinSelect">
+                        <option value="neonGreen">Neon Green</option>
+                        <option value="neonBlue">Neon Blue</option>
+                        <option value="neonPink">Neon Pink</option>
+                        <option value="rainbow">Rainbow</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="minimap-container">
+            <h3>Minimap</h3>
+            <canvas id="minimapCanvas" width="200" height="150"></canvas>
+        </div>
+        
+        <div class="leaderboard">
+            <h3>Leaderboard</h3>
+            <ol id="leaderboardList">
+                <li>Player 1 - 1250</li>
+                <li>Player 2 - 980</li>
+                <li>Player 3 - 750</li>
+                <li>Player 4 - 620</li>
+                <li>Player 5 - 540</li>
+            </ol>
+        </div>
+        
+        <div class="game-features">
+            <h2>Game Features</h2>
+            <ul>
+                <li>Vibrant neon graphics with dark background</li>
+                <li>Smooth snake movement controls</li>
+                <li>Dynamic food spawning with special power-ups</li>
+                <li>Multiple snake skin options</li>
+                <li>Minimap for navigation</li>
+                <li>Leaderboard</li>
+                <li>Increasing difficulty as your snake grows</li>
+            </ul>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 Snake.io Game. All rights reserved.</p>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
